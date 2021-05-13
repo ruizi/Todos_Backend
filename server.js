@@ -9,7 +9,7 @@ dbConnector().then(() => console.log("MongoDB connected"));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoute'));
-app.use('/api/todos', require('./routes/todosRoute'));
+app.use('/api/todo', require('./routes/todosRoute'));
 app.use('/api/user', require('./routes/userRoute'));
 
 const PORT = process.env.PORT || 5000

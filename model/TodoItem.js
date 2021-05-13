@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const todoItemSchema = new mongoose.Schema({
-    holder: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
@@ -11,20 +11,29 @@ const todoItemSchema = new mongoose.Schema({
     },
     subTitle: {
         type: String,
+        default: "",
     },
     description: {
         type: String,
+        default: "",
     },
-    createDate: {
+    isFinished: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    createAt: {
         type: Date,
         default: Date.now
     },
-    scheduleDate: {
+    scheduleAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     },
     repeatCircle: {
         type: String,
+        default: "Once"
     }
 })
 

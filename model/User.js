@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    avatar: {
+        type: String,
+    },
     todoList: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TodoItem'
