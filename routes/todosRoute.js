@@ -48,8 +48,9 @@ router.put('/update',
         if (!errors) {
             return res.status(400).json({errors: errors})
         }
+        const creatorId = req['userId'];
         const newTodoItemInfo = req.body;
-        const returnValue = await updateTodoItemService(newTodoItemInfo);
+        const returnValue = await updateTodoItemService(creatorId,newTodoItemInfo);
         return res.status(returnValue.status).json(returnValue.body);
     })
 

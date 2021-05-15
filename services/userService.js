@@ -1,11 +1,10 @@
 const {settingReturnValue} = require('../utils/result');
-const gravatar = require('gravatar');
-const bcrypt = require('bcryptjs');
-const {findAUserByEmail, findAUserByIdAndPopulateTodoList, creatANewUser} = require('../repositories/userRepository');
+const userRepository = require('../repositories/userRepository');
+//const {findAUserByEmail, findAUserByIdAndPopulateTodoList, creatANewUser} = require('../repositories/userRepository');
 
 const userProfileService = async (userId) => {
     try {
-        const userInfo = await findAUserByIdAndPopulateTodoList(userId);
+        const userInfo = await userRepository.findAUserByIdAndPopulateTodoList(userId);
         if (!userInfo) {
             return settingReturnValue(401, {'message': 'No such user profile!'});
         }
@@ -18,21 +17,13 @@ const userProfileService = async (userId) => {
 
 const userRegisterService = async (email, username, password) => {
     try {
-        const userExist = await findAUserByEmail(email);
+        const userExist = await userRepository.findAUserByEmail(email);
         if (userExist) {
             return settingReturnValue(401, {'message': 'Email already exist! Please use another email address!'});
         }
-        // Get users gravatar
-        const avatar = gravatar.url(email, {s: '200', r: 'pg', d: 'mm'});
-        const newUserObj = {
-            email: email,
-            username: username,
-            password: await bcrypt.hash(password, 10),
-            avatar: avatar
-        }
-        const newUser = await creatANewUser(newUserObj)
-        console.log(newUser);
-        return settingReturnValue(200, {'message': 'Successfully registered'});
+
+        const newUser = await userRepository.creatANewUser(email, username, password);
+        return settingReturnValue(200, {'newUser': newUser});
     } catch (error) {
         console.log(error)
         return settingReturnValue(500, {'message': 'Something went happens,Please Try again later'});

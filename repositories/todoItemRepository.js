@@ -6,7 +6,7 @@ const findTodoItemsByCreatorId = async (creatorId) => {
 }
 
 const findTodoItemsByTodoId = async (todoId) => {
-    return (await TodoItem.find({_id: todoId}));
+    return (await TodoItem.findById({_id: todoId}));
 }
 
 const createANewTodoItem = async (todoItemObj) => {

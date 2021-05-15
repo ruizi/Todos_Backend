@@ -2,13 +2,13 @@ const bcrypt = require('bcryptjs');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const {settingReturnValue} = require('../utils/result');
-const {findAUserByEmail} = require('../repositories/userRepository');
+const userRepository = require('../repositories/userRepository');
 
 const userAuthService = async (email, password) => {
     try {
-        const storedUser = await findAUserByEmail(email);
+        const storedUser = await userRepository.findAUserByEmail(email);
         if (!storedUser) {
-            return settingReturnValue(200, {"message": "No such user or password is wrong"});
+            return settingReturnValue(403, {"message": "No such user or password is wrong"});
         }
         if (!await bcrypt.compare(password, storedUser.password)) {
             return settingReturnValue(403, {"message": "No such user or password is wrong"});
@@ -18,7 +18,7 @@ const userAuthService = async (email, password) => {
             config.get('jwt.JWT_SECRET'),
             {expiresIn: 360000},
         )
-        return settingReturnValue(403, {"token": token});
+        return settingReturnValue(200, {"token": token});
     } catch (error) {
         console.log(error);
         return settingReturnValue(500, {"message": "Auth failed with internal error happened!"});
@@ -27,5 +27,5 @@ const userAuthService = async (email, password) => {
 
 
 module.exports = {
-    userAuthService
+    userAuthService,
 }

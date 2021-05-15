@@ -1,6 +1,8 @@
+const gravatar = require('gravatar');
+const bcrypt = require('bcryptjs');
 const User = require('../model/User');
 
-const findAUserByEmail = async (email) => {
+const findAUserByEmail = async email => {
     return (await User.findOne({email: email}));
 }
 
@@ -18,7 +20,13 @@ const findAUserAndAddTodoItems = async (userId, newTodoItemId) => {
     return (await creator.save());
 }
 
-const creatANewUser = async (newUserObj) => {
+const creatANewUser = async (email, username, password) => {
+    const newUserObj = {
+        email: email,
+        username: username,
+        password: await bcrypt.hash(password, 10),
+        avatar: gravatar.url(email, {s: '200', r: 'pg', d: 'mm'}),
+    }
     return (await new User(newUserObj).save());
 }
 

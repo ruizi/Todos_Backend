@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 20000",
-    "start": "nodemon server.js"
+    "test": "mocha test/unitTest/*.js",
+    "start": "nodemon server.js",
+    "unit-tests": "mocha test/unitTest/*.js"
   },
   "keywords": [],
   "author": "Rui Cai",
