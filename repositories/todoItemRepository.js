@@ -21,11 +21,16 @@ const deleteATodoItemFromCollection = async (todoId) => {
     return (await TodoItem.deleteOne({_id: todoId}));
 }
 
+const deleteByGroupId = async (groupId) => {
+    return (await TodoItem.deleteMany({group: groupId}));
+}
+
 
 module.exports = {
     findTodoItemsByCreatorId,
     findTodoItemsByTodoId,
     createANewTodoItem,
     findTodoItemByIdAndUpdate,
-    deleteATodoItemFromCollection
+    deleteATodoItemFromCollection,
+    deleteByGroupId,
 }

@@ -1,16 +1,9 @@
 const {settingReturnValue} = require('../utils/result');
-//const {findAUserById, findAUserAndAddTodoItems, deleteATodoItemInTodoList} = require('../repositories/userRepository');
 const userRepository = require('../repositories/userRepository');
-// const {
-//     findTodoItemsByCreatorId,
-//     findTodoItemsByTodoId,
-//     createANewTodoItem,
-//     findTodoItemByIdAndUpdate,
-//     deleteATodoItemFromCollection
-// } = require('../repositories/todoItemRepository');
 const todoItemRepository = require('../repositories/todoItemRepository');
+const todoGroupRepository = require('../repositories/todoGroupRepository')
 
-
+// fetch all todoItems created by user
 const todosFetchService = async (creatorId) => {
     try {
         const todoItems = await todoItemRepository.findTodoItemsByCreatorId(creatorId);
@@ -21,11 +14,13 @@ const todosFetchService = async (creatorId) => {
     }
 }
 
+// creat a new TodoItem
 const createTodoItemService = async (creatorId, todoItemInfo) => {
     try {
-        const {title, subTitle, description, scheduleAt, repeatCircle} = todoItemInfo;
+        const {groupId, title, subTitle, description, scheduleAt, repeatCircle} = todoItemInfo;
         const newTodoItem = {
             creator: creatorId,
+            group: groupId,
             title: title,
             subTitle: subTitle,
             description: description,
@@ -37,7 +32,7 @@ const createTodoItemService = async (creatorId, todoItemInfo) => {
 
         const todoItem = await todoItemRepository.createANewTodoItem(newTodoItem);
 
-        await userRepository.findAUserAndAddTodoItems(creatorId, todoItem._id);
+        await todoGroupRepository.findTheGroupAndAddTodoItems(groupId, todoItem._id);
 
         return settingReturnValue(200, {'newTodoItem': todoItem});
     } catch (error) {
@@ -48,18 +43,9 @@ const createTodoItemService = async (creatorId, todoItemInfo) => {
 
 const updateTodoItemService = async (creatorId, newTodoItemInfo) => {
     try {
-        const user = await userRepository.findAUserById(creatorId);
-        console.log(user)
-        const isTodoItemBelongToUser = user.todoList.some((todoItem) => {
-            return todoItem.toString() === newTodoItemInfo._id;
-        })
-
-        if (!isTodoItemBelongToUser) {
-            return settingReturnValue(403, {'message': 'Please use the right todoItem ID'})
-        }
-
         const {
             _id,
+            group,
             title,
             subTitle,
             description,
@@ -68,18 +54,24 @@ const updateTodoItemService = async (creatorId, newTodoItemInfo) => {
             repeatCircle
         } = newTodoItemInfo;
 
+        const theTodoItem = await todoItemRepository.findTodoItemsByTodoId(_id);
+        if (theTodoItem.creator.toString() !== creatorId) {
+            return settingReturnValue(403, {'message': 'Please use the right todoItem ID'})
+        }
+
         const updatedTodoObj = {
             title: title,
             subTitle: subTitle,
             description: description,
             isFinished: isFinished,
             scheduleAt: scheduleAt,
-            repeatCircle: repeatCircle
+            repeatCircle: repeatCircle,
+            group: group
         }
 
-        await todoItemRepository.findTodoItemByIdAndUpdate(_id, updatedTodoObj);
-
-        const updatedTodoItem = await todoItemRepository.findTodoItemsByTodoId(_id);
+        const updatedTodoItem = await todoItemRepository.findTodoItemByIdAndUpdate(_id, updatedTodoObj);
+        console.log(updatedTodoItem)
+        // const updatedTodoItem = await todoItemRepository.findTodoItemsByTodoId(_id);
 
         return settingReturnValue(200, {'updatedTodoItem': updatedTodoItem})
 
@@ -91,24 +83,17 @@ const updateTodoItemService = async (creatorId, newTodoItemInfo) => {
 
 const deleteTodoItemService = async (userId, todoId) => {
     try {
-        const user = await userRepository.findAUserById(userId);
-
-        const isTodoItemBelongToUser = user.todoList.some((todoItem) => {
-            return todoItem.toString() === todoId;
-        })
-
-        if (!isTodoItemBelongToUser) {
+        // firstly, need to verify if the ongoing delete todos is valid and belongs to the auth user.
+        const theTodoItem = await todoItemRepository.findTodoItemsByTodoId(todoId);
+        if (!theTodoItem) {
+            return settingReturnValue(400, {'message': 'Please use the right todoItem ID'})
+        }
+        if (theTodoItem.creator.toString() !== userId) {
             return settingReturnValue(403, {'message': 'Please use the right todoItem ID'})
         }
 
-        // Then, check if the todoItem ID is correct or not
-        const todoItem = await todoItemRepository.findTodoItemsByTodoId(todoId);
-        if (!todoItem) {
-            return settingReturnValue(400, {'message': 'Please use the right todoItem ID'})
-        }
-
-        // Delete the todoInfo from User document
-        await userRepository.deleteATodoItemInTodoList(userId, todoId);
+        // Delete the todoInfo from a User's todoGroup
+        await todoGroupRepository.deleteATodoItemInATodoGroup(theTodoItem)
 
         // delete the todoItem from TodoItem collection
         await todoItemRepository.deleteATodoItemFromCollection(todoId);

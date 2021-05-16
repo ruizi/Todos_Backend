@@ -10,13 +10,25 @@ const findAUserById = async (userId) => {
     return (await User.findOne({_id: userId}));
 }
 
-const findAUserByIdAndPopulateTodoList = async (userId) => {
-    return (await User.findOne({_id: userId}).select('-password').populate('todoList'));
+const findAUserByIdAndPopulate = async (userId) => {
+
+    return (await User.findOne({_id: userId}).select('-password').populate({
+        path: 'todoGroups', //populate todoGroups
+        populate: {
+            path: 'todoList' //in todoGroup, populate todolist
+        }
+    }));
 }
 
 const findAUserAndAddTodoItems = async (userId, newTodoItemId) => {
     const creator = await User.findOne({_id: userId});
     creator.todoList.push(newTodoItemId);
+    return (await creator.save());
+}
+
+const findAUserAndAddTodoGroup = async (userId, newTodoGroupId) => {
+    const creator = await User.findOne({_id: userId});
+    creator.todoGroups.push(newTodoGroupId);
     return (await creator.save());
 }
 
@@ -30,17 +42,19 @@ const creatANewUser = async (email, username, password) => {
     return (await new User(newUserObj).save());
 }
 
-const deleteATodoItemInTodoList = async (userId, todoItemId) => {
+const deleteAGroup = async (userId, groupId) => {
     const user = await User.findOne({_id: userId});
-    user.todoList = user.todoList.filter((todoItem) => todoItem._id.toString() !== todoItemId);
+    console.log(user)
+    user.todoGroups = user.todoGroups.filter((group) => group.toString() !== groupId);
     return (await user.save());
 }
 
 module.exports = {
     findAUserByEmail,
     findAUserById,
-    findAUserByIdAndPopulateTodoList,
+    findAUserByIdAndPopulate,
     findAUserAndAddTodoItems,
+    findAUserAndAddTodoGroup,
     creatANewUser,
-    deleteATodoItemInTodoList
+    deleteAGroup,
 }

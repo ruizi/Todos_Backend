@@ -9,7 +9,8 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoute'));
-app.use('/api/todo', require('./routes/todosRoute'));
+app.use('/api/group', require('./routes/todoGroupRoute'));
+app.use('/api/todo', require('./routes/todoItemsRoute'));
 app.use('/api/user', require('./routes/userRoute'));
 
 const PORT = process.env.PORT || 5000

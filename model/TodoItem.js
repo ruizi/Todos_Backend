@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 
 const todoItemSchema = new mongoose.Schema({
+
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+    },
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TodoGroup',
     },
     title: {
         type: String,

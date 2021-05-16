@@ -7,7 +7,7 @@ const {
     createTodoItemService,
     updateTodoItemService,
     deleteTodoItemService
-} = require('../services/todosService');
+} = require('../services/todoItemsService');
 
 // @route   GET api/todos
 // @desc    Fetching all todoItems belong to the login user.
@@ -18,10 +18,10 @@ router.get('/', is_auth, async (req, res) => {
     return res.status(returnValue.status).json(returnValue.body);
 })
 
-// @route   POST api/todos/create
+// @route   POST api/todos/todoItem
 // @desc    Create a new todoItem
 // @access  Private
-router.post('/create',
+router.post('/todoItem',
     is_auth,
     body('title', 'Please input title of the new todoItem').isEmpty().not(),
     body('scheduleAt', 'Please input the schedule finish date of the new todoItem').isEmpty().not(),
@@ -39,8 +39,9 @@ router.post('/create',
 // @route   PUT api/todos/update
 // @desc    update the todoItem.
 // @access  Private
-router.put('/update',
+router.put('/',
     is_auth,
+    body('groupId', 'please select a todoGroup').isEmpty().not(),
     body('title', 'Please input title of the new todoItem').isEmpty().not(),
     body('scheduleAt', 'Please input the schedule finish date of the new todoItem').isEmpty().not(),
     async (req, res) => {
@@ -50,7 +51,7 @@ router.put('/update',
         }
         const creatorId = req['userId'];
         const newTodoItemInfo = req.body;
-        const returnValue = await updateTodoItemService(creatorId,newTodoItemInfo);
+        const returnValue = await updateTodoItemService(creatorId, newTodoItemInfo);
         return res.status(returnValue.status).json(returnValue.body);
     })
 
@@ -58,8 +59,7 @@ router.put('/update',
 // @desc    delete a todoItem.
 // @access  Private
 
-router.delete('/delete/:todo_id', is_auth, async (req, res) => {
-    // firstly, need to verify if the ongoing delete todos belongs to the auth user.
+router.delete('/:todo_id', is_auth, async (req, res) => {
     const userId = req['userId'];
     const returnValue = await deleteTodoItemService(userId, req.params.todo_id);
     return res.status(returnValue.status).json(returnValue.body);

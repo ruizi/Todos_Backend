@@ -4,7 +4,7 @@ const userRepository = require('../repositories/userRepository');
 
 const userProfileService = async (userId) => {
     try {
-        const userInfo = await userRepository.findAUserByIdAndPopulateTodoList(userId);
+        const userInfo = await userRepository.findAUserByIdAndPopulate(userId);
         if (!userInfo) {
             return settingReturnValue(401, {'message': 'No such user profile!'});
         }

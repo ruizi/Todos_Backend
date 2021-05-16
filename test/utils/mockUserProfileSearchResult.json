@@ -1,21 +1,16 @@
 {
-  "todoList": [
+  "todoGroups": [
     {
-      "subTitle": "",
-      "description": "",
-      "isFinished": false,
-      "repeatCircle": "Once",
-      "_id": "609d6f8818c821ab29669022",
-      "creator": "609c89ee482a379d71fcdfea",
-      "title": "a seventh todo",
-      "createAt": "2021-05-13T18:27:20.793Z",
-      "scheduleAt": "2022-12-17T08:24:00.000Z",
-      "__v": 0
+      "todoList": [],
+      "_id": "60a017c621ef5df2f1e95d20",
+      "owner": "60a014c28e0d92f2b9324f89",
+      "groupName": "A new Group",
+      "__v": 1
     }
   ],
-  "_id": "609c89ee482a379d71fcdfea",
-  "email": "rcai073@uottawa.ca",
+  "_id": "60a014c28e0d92f2b9324f89",
+  "email": "rcai075@uottawa.ca",
   "username": "cairui",
-  "avatar": "//www.gravatar.com/avatar/bedec6b05b6a464242c0520c19e2875d?s=200&r=pg&d=mm",
-  "__v": 7
+  "avatar": "//www.gravatar.com/avatar/25a1e704d7b51a1b48bd516c2c7004c8?s=200&r=pg&d=mm",
+  "__v": 3
 }

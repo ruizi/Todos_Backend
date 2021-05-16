@@ -17,10 +17,12 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
-    todoList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'TodoItem'
-    }]
+    todoGroups: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'TodoGroup',
+        }
+    ],
 })
 
 module.exports = User = mongoose.model('User', userSchema);

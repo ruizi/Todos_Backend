@@ -8,8 +8,8 @@ const mockUserCreateResult = require('../utils/mockUserCreateResult.json');
 
 describe('userService Testing', () => {
     it('should return user profile', async () => {
-        const userId = '609c89ee482a379d71fcdfea';
-        sinon.stub(userRepository, 'findAUserByIdAndPopulateTodoList')
+        const userId = '60a014c28e0d92f2b9324f89';
+        sinon.stub(userRepository, 'findAUserByIdAndPopulate')
             .withArgs(userId)
             .resolves(mockUserProfileSearchResult)
 
