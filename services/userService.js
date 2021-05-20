@@ -1,5 +1,6 @@
 const {settingReturnValue} = require('../utils/result');
 const userRepository = require('../repositories/userRepository');
+const todoGroupRepository = require('../repositories/todoGroupRepository');
 //const {findAUserByEmail, findAUserByIdAndPopulateTodoList, creatANewUser} = require('../repositories/userRepository');
 
 const userProfileService = async (userId) => {
@@ -23,7 +24,16 @@ const userRegisterService = async (email, username, password) => {
         }
 
         const newUser = await userRepository.creatANewUser(email, username, password);
-        return settingReturnValue(200, {'newUser': newUser});
+        // create up two initial todoGroups which is will apply to every user
+        const todoItemGroups = ['Today', 'Important'];
+        for (const todoItemGroup of todoItemGroups) {
+            console.log(todoItemGroup)
+            console.log(newUser)
+            const todoGroup = await todoGroupRepository.createANewTodoGroup(newUser._id, todoItemGroup);
+            console.log(todoGroup)
+            await userRepository.findAUserAndAddTodoGroup(newUser._id, todoGroup._id);
+        }
+        return settingReturnValue(200, {'newUserCreated': 'success'});
     } catch (error) {
         console.log(error)
         return settingReturnValue(500, {'message': 'Something went happens,Please Try again later'});

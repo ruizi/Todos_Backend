@@ -33,6 +33,8 @@ const findAUserAndAddTodoGroup = async (userId, newTodoGroupId) => {
 }
 
 const creatANewUser = async (email, username, password) => {
+
+
     const newUserObj = {
         email: email,
         username: username,

@@ -5,6 +5,11 @@ const {body, validationResult} = require('express-validator');
 
 const todoGroupService = require('../services/todoGroupService');
 
+router.get('/', is_auth, async (req, res) => {
+    const userId = req['userId'];
+    const returnValue = await todoGroupService.todoGroupFetchService(userId);
+    return res.status(returnValue.status).json(returnValue.body);
+})
 
 // @route   POST api/group
 // @desc    Create a new todoItem group

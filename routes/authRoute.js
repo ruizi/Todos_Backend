@@ -27,6 +27,8 @@ router.post('/',
             return res.status(400).json({errors: errors.array()});
         }
         const {email, password} = req.body;
+        console.log(email)
+        console.log(password)
 
         const result = await userAuthService(email, password);
         return res.status(result.status).json(result.body);

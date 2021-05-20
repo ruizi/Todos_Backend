@@ -3,8 +3,10 @@ const chai = require('chai');
 const expect = chai.expect;
 const userService = require('../../services/userService');
 const userRepository = require('../../repositories/userRepository');
+const todoGroupRepository = require('../../repositories/todoGroupRepository');
 const mockUserProfileSearchResult = require('../utils/mockUserProfileSearchResult.json');
 const mockUserCreateResult = require('../utils/mockUserCreateResult.json');
+const mockTodoGroupCreateResult = require('../utils/mockTodoGroupCreateResult.json');
 
 describe('userService Testing', () => {
     it('should return user profile', async () => {
@@ -32,10 +34,16 @@ describe('userService Testing', () => {
             .withArgs(email, username, password)
             .resolves(mockUserCreateResult);
 
+        sinon.stub(todoGroupRepository, 'createANewTodoGroup')
+            .resolves(mockTodoGroupCreateResult);
+
+        sinon.stub(userRepository, 'findAUserAndAddTodoGroup')
+
         const response = await userService.userRegisterService(email, username, password);
+        console.log(response)
         expect(response.status).equal(200);
-        expect(response.body.newUser).is.not.null;
-        expect(response.body.newUser.email).equal(email);
+        expect(response.body.newUserCreated).is.not.null;
+        expect(response.body.newUserCreated).equal('success');
 
     });
 })

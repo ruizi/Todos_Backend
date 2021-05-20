@@ -51,6 +51,7 @@ router.put('/',
         }
         const creatorId = req['userId'];
         const newTodoItemInfo = req.body;
+        console.log(newTodoItemInfo)
         const returnValue = await updateTodoItemService(creatorId, newTodoItemInfo);
         return res.status(returnValue.status).json(returnValue.body);
     })

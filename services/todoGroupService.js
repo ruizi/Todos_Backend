@@ -3,6 +3,18 @@ const userRepository = require('../repositories/userRepository');
 const todoItemRepository = require('../repositories/todoItemRepository');
 const todoGroupRepository = require('../repositories/todoGroupRepository')
 
+// Fetch todoGroup along with todoItems
+const todoGroupFetchService = async (creatorId) => {
+    try {
+        const todoGroups = await todoGroupRepository.findAllGroupsByUserIdAndPopulate(creatorId)
+        return settingReturnValue(200, {'todoGroups': todoGroups});
+    } catch (error) {
+        console.log(error)
+        return settingReturnValue(500, {'message': 'something went wrong! try again later'})
+    }
+}
+
+
 // create a new todoItem group
 const todoGroupCreateService = async (creatorId, todoGroupName) => {
     try {
@@ -58,6 +70,7 @@ const todoGroupDeleteService = async (creatorId, todoGroupId) => {
 }
 
 module.exports = {
+    todoGroupFetchService,
     todoGroupCreateService,
     todoGroupDeleteService,
 }
