@@ -4,10 +4,10 @@ const router = express.Router();
 const is_auth = require('../middleware/is_auth');
 const {userProfileService, userRegisterService} = require('../services/userService');
 
-// Route            Get api/user/profile
+// Route            Get api/user/
 // Description      Get the user's profile info
 // Access           Private
-router.get('/profile', is_auth, async (req, res) => {
+router.get('/', is_auth, async (req, res) => {
     const userId = req['userId'];
     const returnValue = await userProfileService(userId);
     return res.status(returnValue.status).json(returnValue.body);
@@ -16,7 +16,7 @@ router.get('/profile', is_auth, async (req, res) => {
 // Route            POST api/user/
 // Description      User register
 // Access           Public
-router.post('/register',
+router.post('/',
     body('email', "Please input a valid email address").isEmail(),
     body('username', "Please input your username").exists(),
     body('password', "Password should be more than 6 chars").isLength({min: 6}),

@@ -5,6 +5,9 @@ const {body, validationResult} = require('express-validator');
 
 const todoGroupService = require('../services/todoGroupService');
 
+// @route   GET api/group
+// @desc    Get todoItem groups
+// @access  Private
 router.get('/', is_auth, async (req, res) => {
     const userId = req['userId'];
     const returnValue = await todoGroupService.todoGroupFetchService(userId);
@@ -26,6 +29,22 @@ router.post('/', is_auth,
         const returnValue = await todoGroupService.todoGroupCreateService(creatorId, groupName);
         return res.status(returnValue.status).json(returnValue.body);
     })
+
+// @route   PUT api/group
+// @desc    Update a todoItem group
+// @access  Private
+router.put('/', is_auth,
+    body('groupName', 'please input a group name').isEmpty().not(),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors) {
+            return res.status(400).json({errors: errors})
+        }
+        const updatedGroup = req.body;
+        const returnValue = await todoGroupService.todoGroupUpdateService(updatedGroup);
+        return res.status(returnValue.status).json(returnValue.body);
+    }
+)
 
 // @route   DELETE api/group
 // @desc    Delete a todoItem group

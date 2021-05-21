@@ -31,9 +31,8 @@ const createTodoItemService = async (creatorId, todoItemInfo) => {
         };
 
         const todoItem = await todoItemRepository.createANewTodoItem(newTodoItem);
-
         await todoGroupRepository.findTheGroupAndAddTodoItems(groupId, todoItem._id);
-
+        console.log(todoItem)
         return settingReturnValue(200, {'newTodoItem': todoItem});
     } catch (error) {
         console.log(error)

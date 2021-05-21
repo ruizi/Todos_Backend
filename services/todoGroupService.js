@@ -27,6 +27,19 @@ const todoGroupCreateService = async (creatorId, todoGroupName) => {
     }
 }
 
+// update a todoGroup
+const todoGroupUpdateService = async (updatedGroup) => {
+    try {
+        const newGroupName = updatedGroup.groupName;
+        const groupId = updatedGroup._id;
+        const updatedTodoGroup = await todoGroupRepository.updateATodoGroup(groupId, newGroupName);
+        return settingReturnValue(200, {'updatedTodoGroup': updatedTodoGroup});
+    } catch (error) {
+        console.log(error);
+        return settingReturnValue(500, {'message': 'Something went wrong! try again later'});
+    }
+}
+
 // delete a todoItem group
 const todoGroupDeleteService = async (creatorId, todoGroupId) => {
     try {
@@ -72,5 +85,6 @@ const todoGroupDeleteService = async (creatorId, todoGroupId) => {
 module.exports = {
     todoGroupFetchService,
     todoGroupCreateService,
+    todoGroupUpdateService,
     todoGroupDeleteService,
 }

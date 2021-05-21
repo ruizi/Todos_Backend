@@ -19,6 +19,13 @@ const createANewTodoGroup = async (creatorId, newTodoGroupName) => {
     return (await newTodoGroupObj.save());
 }
 
+const updateATodoGroup = async (groupId, newGroupName) => {
+    return (await TodoGroup.findByIdAndUpdate({_id: groupId}, {groupName: newGroupName}, {
+        new: true
+    }));
+
+}
+
 const findTheGroupAndAddTodoItems = async (todoGroupId, newTodoItemId) => {
     const toBeUpdatedGroup = await TodoGroup.findOne({_id: todoGroupId})
     toBeUpdatedGroup.todoList.push(newTodoItemId);
@@ -39,6 +46,7 @@ module.exports = {
     findGroupById,
     findAllGroupsByUserIdAndPopulate,
     createANewTodoGroup,
+    updateATodoGroup,
     findTheGroupAndAddTodoItems,
     deleteByGroupId,
     deleteATodoItemInATodoGroup,

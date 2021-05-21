@@ -21,8 +21,9 @@ router.get('/', is_auth, async (req, res) => {
 // @route   POST api/todos/todoItem
 // @desc    Create a new todoItem
 // @access  Private
-router.post('/todoItem',
+router.post('/',
     is_auth,
+    body('groupId', 'please specify the group Id').isEmpty().not(),
     body('title', 'Please input title of the new todoItem').isEmpty().not(),
     body('scheduleAt', 'Please input the schedule finish date of the new todoItem').isEmpty().not(),
     async (req, res) => {
@@ -32,15 +33,17 @@ router.post('/todoItem',
         }
         const creatorId = req['userId'];
         const todoItemInfo = req.body;
+        console.log(todoItemInfo)
         const returnValue = await createTodoItemService(creatorId, todoItemInfo);
         return res.status(returnValue.status).json(returnValue.body);
     })
 
-// @route   PUT api/todos/update
+// @route   PUT api/todos/
 // @desc    update the todoItem.
 // @access  Private
 router.put('/',
     is_auth,
+    body('_id', 'please specify the todoItem Id').isEmpty().not(),
     body('groupId', 'please select a todoGroup').isEmpty().not(),
     body('title', 'Please input title of the new todoItem').isEmpty().not(),
     body('scheduleAt', 'Please input the schedule finish date of the new todoItem').isEmpty().not(),
@@ -56,7 +59,7 @@ router.put('/',
         return res.status(returnValue.status).json(returnValue.body);
     })
 
-// @route   DELETE api/todos/delete/:todo_id
+// @route   DELETE api/todos/:todo_id
 // @desc    delete a todoItem.
 // @access  Private
 
