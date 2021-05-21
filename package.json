@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/unitTest/*.js",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "test-start": "node server.js",
     "unit-tests": "mocha test/unitTest/*.js",
     "integration-tests": "mocha test/IntegrationTest/*.js",
