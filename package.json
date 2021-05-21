@@ -9,7 +9,6 @@
     "unit-tests": "mocha test/unitTest/*.js",
     "integration-tests": "mocha test/IntegrationTest/*.js",
     "combine-testing": "mocha test/**/*.js"
-
   },
   "keywords": [],
   "author": "Rui Cai",
